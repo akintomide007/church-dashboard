@@ -1,0 +1,35 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Environment
+.env
+.env.local
+
+# Database
+*.db
+*.sqlite3
+postgres_data/
+
+# Docker volumes
+qdrant_data/
+redis_data/
+ollama_data/
+
+# Models
+models/
+downloads/
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
