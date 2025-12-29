@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from app.core.database import get_db, redis_client
 import json
 
@@ -28,9 +29,9 @@ async def search_hymns(
         """
         if hymnal:
             sql += " AND hymnal = :hymnal"
-            results = db.execute(sql, {"query": int(query), "hymnal": hymnal}).fetchall()
+            results = db.execute(text(sql), {"query": int(query), "hymnal": hymnal}).fetchall()
         else:
-            results = db.execute(sql, {"query": int(query)}).fetchall()
+            results = db.execute(text(sql), {"query": int(query)}).fetchall()
     else:
         # Search by title or theme
         sql = """
@@ -41,9 +42,9 @@ async def search_hymns(
         """
         if hymnal:
             sql += " AND hymnal = :hymnal"
-            results = db.execute(sql, {"query": query, "hymnal": hymnal}).fetchall()
+            results = db.execute(text(sql), {"query": query, "hymnal": hymnal}).fetchall()
         else:
-            results = db.execute(sql, {"query": query}).fetchall()
+            results = db.execute(text(sql), {"query": query}).fetchall()
     
     hymns = [
         {
@@ -82,7 +83,7 @@ async def get_hymn(
         WHERE id = :hymn_id
     """
     
-    result = db.execute(sql, {"hymn_id": hymn_id}).fetchone()
+    result = db.execute(text(sql), {"hymn_id": hymn_id}).fetchone()
     
     if not result:
         raise HTTPException(status_code=404, detail="Hymn not found")
@@ -120,9 +121,9 @@ async def get_hymns_by_theme(
     
     if hymnal:
         sql += " AND hymnal = :hymnal"
-        results = db.execute(sql, {"theme": theme, "hymnal": hymnal}).fetchall()
+        results = db.execute(text(sql), {"theme": theme, "hymnal": hymnal}).fetchall()
     else:
-        results = db.execute(sql, {"theme": theme}).fetchall()
+        results = db.execute(text(sql), {"theme": theme}).fetchall()
     
     hymns = [
         {

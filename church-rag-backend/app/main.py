@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api import bible, sermon, hymns, projection, ai
+from app.api import bible, sermon, hymns, projection, ai, slides, teachings, songs, documents
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -24,6 +24,10 @@ app.include_router(sermon.router, prefix="/api/sermon", tags=["Sermon"])
 app.include_router(hymns.router, prefix="/api/hymns", tags=["Hymns"])
 app.include_router(projection.router, prefix="/api/projection", tags=["Projection"])
 app.include_router(ai.router, prefix="/api/ai", tags=["AI"])
+app.include_router(slides.router, prefix="/api/slides", tags=["Slides"])
+app.include_router(teachings.router, prefix="/api/teachings", tags=["Teachings"])
+app.include_router(songs.router, prefix="/api/songs", tags=["Songs"])
+app.include_router(documents.router, prefix="/api/documents", tags=["Documents"])
 
 @app.get("/")
 async def root():

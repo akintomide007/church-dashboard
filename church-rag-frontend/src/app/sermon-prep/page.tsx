@@ -190,36 +190,10 @@ export default function SermonPrepPage() {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+      <Box sx={{ mb: 4 }}>
         <Typography variant="h3" fontWeight={700}>
           Sermon Preparation
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button
-            variant="outlined"
-            startIcon={<FolderOpenIcon />}
-            onClick={loadSermons}
-            disabled={loading}
-          >
-            Load
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={loading ? <CircularProgress size={20} /> : <SaveIcon />}
-            onClick={handleSave}
-            disabled={loading}
-          >
-            {loading ? 'Saving...' : 'Save Draft'}
-          </Button>
-          <Button
-            variant="contained"
-            startIcon={aiLoading ? <CircularProgress size={20} color="inherit" /> : <AutoAwesomeIcon />}
-            onClick={generateAISuggestions}
-            disabled={aiLoading}
-          >
-            {aiLoading ? 'Generating...' : 'Get AI Suggestions'}
-          </Button>
-        </Box>
       </Box>
 
       {error && (
@@ -229,7 +203,7 @@ export default function SermonPrepPage() {
       )}
 
       <Grid container spacing={3}>
-        <Grid item xs={12} lg={9}>
+        <Grid item xs={12}>
           <Card>
             <CardContent>
               <TextField
@@ -268,11 +242,34 @@ export default function SermonPrepPage() {
 
               <Divider sx={{ my: 3 }} />
 
-              <Tabs value={currentTab} onChange={(_, v) => setCurrentTab(v)}>
-                <Tab label="Outline" />
-                <Tab label="Notes" />
-                <Tab label="Full Manuscript" />
-              </Tabs>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs value={currentTab} onChange={(_, v) => setCurrentTab(v)}>
+                  <Tab label="Outline" />
+                  <Tab label="Notes" />
+                  <Tab label="Full Manuscript" />
+                  <Tab label="AI Suggestions" />
+                </Tabs>
+                <Box sx={{ display: 'flex', gap: 2, pb: 1 }}>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    startIcon={<FolderOpenIcon />}
+                    onClick={loadSermons}
+                    disabled={loading}
+                  >
+                    Load
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    startIcon={loading ? <CircularProgress size={20} /> : <SaveIcon />}
+                    onClick={handleSave}
+                    disabled={loading}
+                  >
+                    {loading ? 'Saving...' : 'Save Draft'}
+                  </Button>
+                </Box>
+              </Box>
 
               <TabPanel value={currentTab} index={0}>
                 <TextField
@@ -310,75 +307,84 @@ export default function SermonPrepPage() {
                   onChange={(e) => handleSermonChange('manuscript', e.target.value)}
                 />
               </TabPanel>
+
+              <TabPanel value={currentTab} index={3}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="h6" fontWeight={600}>
+                      Generate AI Suggestions
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      startIcon={aiLoading ? <CircularProgress size={20} color="inherit" /> : <AutoAwesomeIcon />}
+                      onClick={generateAISuggestions}
+                      disabled={aiLoading}
+                    >
+                      {aiLoading ? 'Generating...' : 'Get AI Suggestions'}
+                    </Button>
+                  </Box>
+
+                  {!aiSuggestions && !hymnSuggestions.length && (
+                    <Alert severity="info">
+                      Click "Get AI Suggestions" to generate:
+                      <Box component="ul" sx={{ mt: 1, mb: 0 }}>
+                        <li>Sermon outline</li>
+                        <li>Key points</li>
+                        <li>Hymn suggestions</li>
+                        <li>Cross-references</li>
+                      </Box>
+                    </Alert>
+                  )}
+
+                  {aiSuggestions && (
+                    <Card>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                          <Typography variant="h6" fontWeight={600}>
+                            AI Outline
+                          </Typography>
+                          <Button size="small" variant="outlined" onClick={insertAISuggestions}>
+                            Insert into Outline
+                          </Button>
+                        </Box>
+                        <Paper sx={{ p: 2, bgcolor: 'background.default', maxHeight: 400, overflow: 'auto' }}>
+                          <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace' }}>
+                            {aiSuggestions}
+                          </Typography>
+                        </Paper>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {hymnSuggestions.length > 0 && (
+                    <Card>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                          <MusicNoteIcon color="primary" />
+                          <Typography variant="h6" fontWeight={600}>
+                            Hymn Suggestions
+                          </Typography>
+                        </Box>
+                        <List>
+                          {hymnSuggestions.map((hymn, index) => (
+                            <ListItem key={index} disablePadding sx={{ mb: 1 }}>
+                              <Paper sx={{ p: 1.5, width: '100%', bgcolor: 'background.default' }}>
+                                <Typography variant="body2">
+                                  {hymn}
+                                </Typography>
+                              </Paper>
+                            </ListItem>
+                          ))}
+                        </List>
+                      </CardContent>
+                    </Card>
+                  )}
+                </Box>
+              </TabPanel>
             </CardContent>
           </Card>
         </Grid>
 
-        {/* AI Suggestions Sidebar */}
-        <Grid item xs={12} lg={3}>
-          {aiSuggestions && (
-            <Card sx={{ mb: 3 }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                  <Typography variant="h6" fontWeight={600}>
-                    AI Outline
-                  </Typography>
-                  <Button size="small" onClick={insertAISuggestions}>
-                    Insert
-                  </Button>
-                </Box>
-                <Paper sx={{ p: 2, bgcolor: 'background.default', maxHeight: 300, overflow: 'auto' }}>
-                  <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace' }}>
-                    {aiSuggestions}
-                  </Typography>
-                </Paper>
-              </CardContent>
-            </Card>
-          )}
-
-          {hymnSuggestions.length > 0 && (
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                  <MusicNoteIcon color="primary" />
-                  <Typography variant="h6" fontWeight={600}>
-                    Hymn Suggestions
-                  </Typography>
-                </Box>
-                <List>
-                  {hymnSuggestions.map((hymn, index) => (
-                    <ListItem key={index} disablePadding sx={{ mb: 1 }}>
-                      <Paper sx={{ p: 1.5, width: '100%', bgcolor: 'background.default' }}>
-                        <Typography variant="body2">
-                          {hymn}
-                        </Typography>
-                      </Paper>
-                    </ListItem>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
-          )}
-
-          {!aiSuggestions && !hymnSuggestions.length && (
-            <Card>
-              <CardContent>
-                <Typography variant="h6" fontWeight={600} gutterBottom>
-                  AI Assistant
-                </Typography>
-                <Alert severity="info">
-                  Click "Get AI Suggestions" to generate:
-                  <Box component="ul" sx={{ mt: 1, mb: 0 }}>
-                    <li>Sermon outline</li>
-                    <li>Key points</li>
-                    <li>Hymn suggestions</li>
-                    <li>Cross-references</li>
-                  </Box>
-                </Alert>
-              </CardContent>
-            </Card>
-          )}
-        </Grid>
       </Grid>
 
       {/* Load Sermon Dialog */}

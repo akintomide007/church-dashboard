@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     WHISPER_MODEL: str = "medium"
     
     # CORS - Changed to handle comma-separated string
-    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:3002"
+    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:3001,http://localhost:3002"
     
     @property
     def cors_origins(self) -> List[str]:

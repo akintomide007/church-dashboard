@@ -18,6 +18,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import PresentToAllIcon from '@mui/icons-material/PresentToAll';
+import SlideshowIcon from '@mui/icons-material/Slideshow';
 import FolderIcon from '@mui/icons-material/Folder';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -35,6 +36,7 @@ const navigation: NavigationItem[] = [
   { name: 'Bible Study', path: '/bible', icon: <MenuBookIcon /> },
   { name: 'Hymns', path: '/hymns', icon: <MusicNoteIcon /> },
   { name: 'Live Projection', path: '/projection', icon: <PresentToAllIcon /> },
+  { name: 'Slide Generator', path: '/slides', icon: <SlideshowIcon /> },
   { name: 'My Documents', path: '/documents', icon: <FolderIcon /> },
   { name: 'Church Library', path: '/library', icon: <LibraryBooksIcon /> },
 ];

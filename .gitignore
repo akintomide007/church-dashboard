@@ -3,7 +3,9 @@
 # ============================================
 
 # dependencies
+node_modules/
 /node_modules
+church-rag-frontend/node_modules/
 /.pnp
 .pnp.js
 
@@ -288,3 +290,19 @@ temp/
 # Test data
 /test_data/
 /sample_data/
+
+# ============================================
+# SLIDE GENERATOR
+# ============================================
+
+# Google Service Account credentials
+church-rag-backend/slide_content/credentials.json
+
+# Generated slides
+church-rag-backend/slide_content/output_pptx/*.pptx
+
+# Downloaded content
+church-rag-backend/slide_content/incoming/
+
+# Processed files registry
+church-rag-backend/slide_content/processed_files.json

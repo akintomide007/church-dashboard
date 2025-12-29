@@ -46,7 +46,7 @@ interface SearchResult {
 }
 
 export default function BibleStudyPage() {
-  const [bibleVersion, setBibleVersion] = useState('NIV');
+  const [bibleVersion, setBibleVersion] = useState('KJV');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult | null>(null);
@@ -122,14 +122,15 @@ export default function BibleStudyPage() {
   const formatVerseReference = (verses: BibleVerse[]): string => {
     if (verses.length === 0) return '';
     if (verses.length === 1) {
-      return `${verses[0].book} ${verses[0].chapter}:${verses[0].verse}`;
+      const v = verses[0];
+      return `${v.book || 'Unknown'} ${v.chapter || ''}:${v.verse || ''}`;
     }
     const first = verses[0];
     const last = verses[verses.length - 1];
     if (first.book === last.book && first.chapter === last.chapter) {
-      return `${first.book} ${first.chapter}:${first.verse}-${last.verse}`;
+      return `${first.book || 'Unknown'} ${first.chapter}:${first.verse}-${last.verse}`;
     }
-    return `${first.book} ${first.chapter}:${first.verse} - ${last.book} ${last.chapter}:${last.verse}`;
+    return `${first.book || 'Unknown'} ${first.chapter}:${first.verse} - ${last.book || 'Unknown'} ${last.chapter}:${last.verse}`;
   };
 
   return (

@@ -10,7 +10,7 @@ router = APIRouter()
 @router.get("/search")
 async def search_bible(
     query: str = Query(..., description="Verse reference or keyword"),
-    version: str = Query("NIV", description="Bible version"),
+    version: str = Query("KJV", description="Bible version"),
     db: Session = Depends(get_db)
 ):
     """
@@ -21,18 +21,24 @@ async def search_bible(
     - faith hope love
     """
     
-    # Check cache first
-    cache_key = f"bible:search:{version}:{query}"
-    cached = redis_client.get(cache_key)
-    if cached:
-        return json.loads(cached)
+    # Check cache first (optional - skip if Redis fails)
+    try:
+        cache_key = f"bible:search:{version}:{query}"
+        cached = redis_client.get(cache_key)
+        if cached:
+            return json.loads(cached)
+    except:
+        pass  # Redis optional, continue without cache
     
     # Parse verse reference (e.g., "John 3:16")
     result = parse_and_fetch_verse(query, version, db)
     
     if result:
-        # Cache for 1 hour
-        redis_client.setex(cache_key, 3600, json.dumps(result))
+        # Try to cache for 1 hour (optional)
+        try:
+            redis_client.setex(cache_key, 3600, json.dumps(result))
+        except:
+            pass  # Cache optional
         return result
     
     raise HTTPException(status_code=404, detail="Verse not found")
@@ -43,15 +49,18 @@ async def get_verse(
     book: str,
     chapter: int,
     verse: int,
-    version: str = Query("NIV"),
+    version: str = Query("KJV"),
     db: Session = Depends(get_db)
 ):
     """Get specific verse"""
     
-    cache_key = f"bible:verse:{version}:{book}:{chapter}:{verse}"
-    cached = redis_client.get(cache_key)
-    if cached:
-        return json.loads(cached)
+    try:
+        cache_key = f"bible:verse:{version}:{book}:{chapter}:{verse}"
+        cached = redis_client.get(cache_key)
+        if cached:
+            return json.loads(cached)
+    except:
+        pass
     
     # Query database
     query_sql = text("""

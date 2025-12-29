@@ -1,0 +1,19 @@
+{
+  "services": [
+    {
+      "name": "08AM",
+      "start_time": "08:00",
+      "drive_folder_id": "1mp3wqkmah07wbBIsTY3CxMI4mpAfimFh"
+    },
+    {
+      "name": "11AM",
+      "start_time": "11:00",
+      "drive_folder_id": "1AvMX5thzLgVGjhAg0nkd0ZRuVGGWkaM7"
+    },
+    {
+      "name": "06PM",
+      "start_time": "18:00",
+      "drive_folder_id": "1TXJi-dDUb2lRcye3cG54tFbnZXnvuGpy"
+    }
+  ]
+}
